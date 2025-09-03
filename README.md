@@ -22,7 +22,10 @@
 ## Featured Projects
 ### BAM Release Documentation
 Involved in preparing release notes and structured docs inspired by **Ericsson BAM product documentation**.  
-**Tech/Tools:** DITA, Markdown, Gerrit workflows  
+**Tech/Tools:** DITA, Markdown, Gerrit workflows 
+
+### Sample Writing
+[Integrate GPay with Ericsson JS SDK for Direct Merchants](https://github.com/preethamadhu6/Madhupreetha/blob/main/Integrate%20Gpay%20with%20Ericsson%20JS%20SDK%20for%20Direct%20Merchants)
 
 ### Doc-as-Code
 A lightweight **Doc-as-Code** setup using Markdown and VS Code for automated publishing.
