@@ -1,0 +1,127 @@
+# Introduction
+
+**Google Pay** is a mobile payment and digital wallet service provided by Alphabet Inc.  
+
+- **For Buyers**: Google Pay allows customers to complete payments quickly in a supported browser or device.  
+- **For Sellers**: Google Pay enables businesses to sell both physical products (e.g., clothing, electronics) and intangible services (e.g., event tickets, memberships).
+
+# Supported Countries and Currencies
+
+## Countries
+Google Pay operates in **36 countries**:
+
+Australia, Austria, Belgium, Bulgaria, Canada, China, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hong Kong, Hungary, Ireland, Italy, Japan, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Netherlands, Norway, Poland, Portugal, Romania, Singapore, Slovakia, Slovenia, Spain, Sweden, United States, United Kingdom.
+
+## Currencies
+Google Pay accepts **22 currencies** for transactions:  
+AUD, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HUF, ILS, JPY, MXN, NOK, NZD, PHP, PLN, SEK, SGD, THB, TWD, USD.
+
+> Local processors (NTTD) and acquirers in Japan do not support TPAN for Visa, MasterCard, JCB, or Diners Club cards.
+
+---
+
+# Working Procedure
+
+1. **Google Pay button appears**  
+   On supported browsers/devices, the Google Pay button is displayed.  
+
+2. **Buyer clicks Google Pay button**  
+   The customer taps the button to initiate checkout.  
+
+3. **Payment sheet is displayed**  
+   A Google Pay sheet opens showing order details.  
+
+4. **Buyer selects preferences**  
+   The customer can adjust address or choose another stored method.  
+
+5. **Buyer authorizes payment**  
+   The customer confirms and authorizes payment.  
+
+---
+
+# Sandbox and Test Account Setup
+
+## Prerequisites
+- A **sandbox merchant account** that supports Google Pay.  
+- Access to the **Ericsson Payments Console** (or equivalent PSP dashboard).  
+
+## Steps
+1. Log in to the **Ericsson Payments Console / PSP Dashboard**.  
+2. Navigate to **Apps & Credentials**.  
+3. Ensure that the environment is **Sandbox**.  
+4. Select or create an application.  
+5. Under **Features**, enable **Google Pay** and save.  
+
+> If Google Pay is disabled, complete sandbox onboarding with your PSP or Ericsson Payments team.  
+> For production use, follow the Ericsson **Go-Live checklist** (PCI, SCA, domain verification, and acquirer whitelisting).
+
+---
+
+# Test Environment Setup
+
+Before development, complete the following:  
+
+- Create a **sandbox merchant account**.  
+- Obtain **merchant ID / client ID**.  
+- Create **sandbox users/test cards** as required by the PSP.  
+
+---
+
+# Integration Steps
+
+## Server API (Orders Flow)
+
+Server endpoints must be implemented to connect with the **Ericsson Payments API** or your PSP’s Orders API:
+
+- **Create Order**  
+- **Authorize Payment** (if auth/capture flow is required)  
+- **Capture Payment**  
+
+### Example: Node.js (Express)
+
+```code
+// server.js
+import express from "express";
+import * as EricssonPay from "./ericsson-payments.js"; // Placeholder SDK
+const app = express();
+app.use(express.json());
+
+/* Create Order */
+app.post("/api/orders", async (req, res) => {
+  try {
+    const order = await EricssonPay.createOrder({
+      amount: req.body.amount,
+      currency: req.body.currency,
+    });
+    res.json(order);
+  } catch (e) {
+    console.error("Create order failed:", e);
+    res.status(500).json({ error: "CREATE_ORDER_FAILED" });
+  }
+});
+
+/* Capture Payment */
+app.post("/api/orders/:orderID/capture", async (req, res) => {
+  try {
+    const { orderID } = req.params;
+    const captureData = await EricssonPay.capturePayment(orderID);
+    res.json(captureData);
+  } catch (e) {
+    console.error("Capture failed:", e);
+    res.status(500).json({ error: "CAPTURE_FAILED" });
+  }
+});
+
+app.listen(3000, () => console.log("Server listening on port 3000"));
+```
+# Conclusion
+
+The Google Pay integration provides Ericsson merchants with a secure and streamlined checkout option that improves the customer experience and reduces cart abandonment.  
+
+By following the steps in this guide—setting up sandbox accounts, configuring the test environment, implementing server-side APIs, and enabling the Google Pay button on the client side—you can ensure a reliable integration aligned with Ericsson’s payment standards.  
+
+Key benefits of this integration include:  
+- **Simplified checkout**: Customers complete payments with fewer steps.  
+- **Global reach**: Supported in 36 countries and 22 currencies.  
+- **Security and compliance**: Built-in tokenization and alignment with PCI/SCA requirements.  
+- **Flexibility**: Works with Ericsson’s internal payment flows and can be extended with additional payment methods.  
